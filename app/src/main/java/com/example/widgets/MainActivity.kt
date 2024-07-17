@@ -2,7 +2,11 @@ package com.example.widgets
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +15,7 @@ import com.example.widgets.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var kontrol=false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityMainBinding.inflate(layoutInflater)
@@ -41,15 +46,56 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.toggleButton.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            val secilenButon=findViewById<Button>(binding.toggleButton.checkedButtonId)
-            val butonYazi=secilenButon.text.toString()
-            Log.e("Seçilen",butonYazi)
+            kontrol=isChecked
+            if (kontrol)
+            {
+                val secilenButon=findViewById<Button>(binding.toggleButton.checkedButtonId)
+                val butonYazi=secilenButon.text.toString()
+                Log.e("Seçilen",butonYazi)
+            }
+
         }
+
+        val ulkeler=ArrayList<String>()
+        ulkeler.add("Türkiye")
+        ulkeler.add("İngiltere")
+        ulkeler.add("Hollanda")
+        ulkeler.add("Norveç")
+
+        val arrayAdapter =ArrayAdapter(this,android.R.layout.simple_list_item_activated_1,ulkeler)
+        binding.autoCompleteTextView.setAdapter(arrayAdapter)
+
+
+        binding.buttonBasla.setOnClickListener {
+            binding.progressBar.visibility= View.VISIBLE
+        }
+
+        binding.buttonDur.setOnClickListener {
+            binding.progressBar.visibility= View.INVISIBLE
+        }
+
+        binding.textViewSlider.text=binding.slider.progress.toString() // text view'e slider'ın ilk değerini atmaak
+
+        binding.slider.setOnSeekBarChangeListener(object :OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.textViewSlider.text=progress.toString()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+
         binding.buttonGoster.setOnClickListener {
             Log.e("Widgets","Switch Durum : ${binding.switch1.isChecked }")
+            if (kontrol){
             val secilenButon=findViewById<Button>(binding.toggleButton.checkedButtonId)
             val butonYazi=secilenButon.text.toString()
             Log.e("Goster Uzerinden Sonuc","Toggle Durum: $butonYazi")
+            }
+            val ulke=binding.autoCompleteTextView.text.toString()
+            Log.e("Sonuc Ulke:",ulke)
+
+            Log.e("Sonuc:","Slider Deger:${binding.slider.progress}")
         }
 
 
