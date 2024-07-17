@@ -12,6 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.widgets.databinding.ActivityMainBinding
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -85,6 +90,39 @@ class MainActivity : AppCompatActivity() {
         })
 
 
+
+
+        binding.buttonSaat.setOnClickListener {
+            val tp=MaterialTimePicker.Builder()
+                .setTitleText("Saat Seçiniz")
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .build()
+
+            tp.show(supportFragmentManager,"Saat")
+            tp.addOnPositiveButtonClickListener {
+                binding.editTextSaat.setText("${tp.hour}:${tp.minute}")
+            }
+        }
+
+
+        binding.buttonTarih.setOnClickListener {
+            val dt=MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Tarih Seçiniz")
+                .build()
+
+            dt.show(supportFragmentManager,"Tarih")
+            dt.addOnPositiveButtonClickListener {
+                val df=SimpleDateFormat("EEEE, MMM, d, yyyy", Locale.getDefault())
+                val tarih=df.format(it)
+                binding.editTextTarih.setText(tarih)
+            }
+        }
+
+
+
+
+
+
         binding.buttonGoster.setOnClickListener {
             Log.e("Widgets","Switch Durum : ${binding.switch1.isChecked }")
             if (kontrol){
@@ -97,6 +135,7 @@ class MainActivity : AppCompatActivity() {
 
             Log.e("Sonuc:","Slider Deger:${binding.slider.progress}")
         }
+
 
 
 
